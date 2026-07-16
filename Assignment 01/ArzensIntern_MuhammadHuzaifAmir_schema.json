@@ -1,0 +1,273 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/schemas/security-event.schema.json",
+  "title": "Security Event",
+  "description": "Schema for a security event record covering the raw event, automated enrichment, confidence scoring, human approval status, and the audit trail of actions taken on the event.",
+  "$comment": "Design notes: (1) 'confidence' is kept as its own top-level section rather than a single number on the event, because different fields (e.g. the severity score vs. an enrichment match) can each carry their own confidence, and a reviewer needs to see which specific field a confidence value is scoring. (2) 'approval' is always present, even for events that never require containment action, so that 'auto-approved' vs 'not applicable' vs 'pending' is always explicit and never inferred from an empty field. (3) 'audit_trail' is an append-only ordered array (oldest first) so it can be replayed to reconstruct exactly what happened and who/what did it -- this is what lets a human reconstruct 'did a person or the AI make this call'.",
+  "type": "object",
+  "required": ["event", "enrichment", "confidence", "approval", "audit_trail"],
+  "additionalProperties": false,
+  "properties": {
+    "event": {
+      "type": "object",
+      "description": "Core fields describing the raw security event as originally observed.",
+      "required": ["event_id", "timestamp", "source", "event_type", "severity"],
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "description": "Globally unique identifier for this event.",
+          "minLength": 1
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the event occurred, in ISO 8601 / RFC 3339 format (UTC recommended)."
+        },
+        "source": {
+          "type": "string",
+          "description": "System or sensor that generated the event, e.g. 'edr:workstation-042', 'firewall:core-01', 'siem:correlation-rule-17'.",
+          "minLength": 1
+        },
+        "event_type": {
+          "type": "string",
+          "description": "Category of the event.",
+          "enum": [
+            "authentication",
+            "malware_detection",
+            "network_intrusion",
+            "data_exfiltration",
+            "privilege_escalation",
+            "policy_violation",
+            "insider_activity",
+            "vulnerability",
+            "other"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "description": "Initial severity classification of the raw event, before enrichment.",
+          "enum": ["informational", "low", "medium", "high", "critical"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Free-text summary of what was observed."
+        }
+      }
+    },
+
+    "enrichment": {
+      "type": "object",
+      "description": "Automated enrichment results attached to the event. This section only ever contains machine-gathered context, never a decision -- see confidence and approval for how that context is judged and acted on.",
+      "required": ["threat_intel_matches", "asset_context", "related_events"],
+      "additionalProperties": false,
+      "properties": {
+        "threat_intel_matches": {
+          "type": "array",
+          "description": "Indicators from the event that matched known threat intelligence.",
+          "items": {
+            "type": "object",
+            "required": ["indicator", "indicator_type", "source", "match_type"],
+            "additionalProperties": false,
+            "properties": {
+              "indicator": {
+                "type": "string",
+                "description": "The matched value, e.g. an IP, domain, or file hash."
+              },
+              "indicator_type": {
+                "type": "string",
+                "enum": ["ip", "domain", "url", "file_hash", "email", "cve", "other"]
+              },
+              "source": {
+                "type": "string",
+                "description": "Name of the threat intel feed or provider that produced the match."
+              },
+              "match_type": {
+                "type": "string",
+                "enum": ["exact", "heuristic", "campaign_correlation"]
+              },
+              "campaign_or_actor": {
+                "type": ["string", "null"],
+                "description": "Optional label for a known campaign or actor associated with the match. This is enrichment context only -- it is NOT an attribution decision (see the position paper, Part 2)."
+              }
+            }
+          }
+        },
+        "asset_context": {
+          "type": "object",
+          "description": "Context about the asset(s) involved in the event.",
+          "required": ["asset_id", "criticality"],
+          "additionalProperties": false,
+          "properties": {
+            "asset_id": {
+              "type": "string",
+              "description": "Identifier of the primary asset involved (hostname, IP, device ID, or account ID)."
+            },
+            "asset_type": {
+              "type": "string",
+              "enum": ["workstation", "server", "network_device", "cloud_resource", "user_account", "other"]
+            },
+            "criticality": {
+              "type": "string",
+              "description": "Business criticality of the asset, used to weigh how much impact a containment action would have.",
+              "enum": ["low", "medium", "high", "mission_critical"]
+            },
+            "owner": {
+              "type": "string",
+              "description": "Team or individual responsible for the asset."
+            }
+          }
+        },
+        "related_events": {
+          "type": "array",
+          "description": "IDs of other events the enrichment process correlated with this one, e.g. as part of a single attack chain.",
+          "items": {
+            "type": "object",
+            "required": ["event_id", "relationship"],
+            "additionalProperties": false,
+            "properties": {
+              "event_id": {
+                "type": "string",
+                "description": "event_id of the related event."
+              },
+              "relationship": {
+                "type": "string",
+                "enum": ["same_asset", "same_actor_indicator", "temporal_correlation", "same_campaign", "other"]
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "confidence": {
+      "type": "object",
+      "description": "Confidence scoring for the automated parts of this record. A defined 0-100 numeric scale is used, with a categorical label as a human-readable mirror of the same scale, and 'applies_to' makes explicit which field the score is judging.",
+      "required": ["scale", "overall_score", "overall_label", "applies_to"],
+      "additionalProperties": false,
+      "properties": {
+        "scale": {
+          "type": "string",
+          "const": "0-100",
+          "description": "Fixed numeric scale used for all confidence scores in this record. 0 = no confidence, 100 = certain."
+        },
+        "overall_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall confidence that the enrichment/severity assessment for this event is correct."
+        },
+        "overall_label": {
+          "type": "string",
+          "description": "Categorical mirror of overall_score. Bands: low = 0-39, medium = 40-69, high = 70-89, very_high = 90-100.",
+          "enum": ["low", "medium", "high", "very_high"]
+        },
+        "applies_to": {
+          "type": "array",
+          "description": "Which field(s) of this record the overall confidence score is judging, e.g. 'event.severity' or 'enrichment.threat_intel_matches'. Required so a reviewer never has to guess what a confidence number is actually about.",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "field_scores": {
+          "type": "array",
+          "description": "Optional per-field confidence breakdown, for when different enriched fields warrant different confidence levels.",
+          "items": {
+            "type": "object",
+            "required": ["field", "score"],
+            "additionalProperties": false,
+            "properties": {
+              "field": { "type": "string" },
+              "score": { "type": "number", "minimum": 0, "maximum": 100 }
+            }
+          }
+        }
+      }
+    },
+
+    "approval": {
+      "type": "object",
+      "description": "Human approval status for any action associated with this event. This field is always present and explicit, even when no action is required, so that approval state is never left to be inferred.",
+      "required": ["approval_status"],
+      "additionalProperties": false,
+      "properties": {
+        "approval_status": {
+          "type": "string",
+          "description": "pending = awaiting a human decision; approved/rejected = a human has decided; auto_approved = the action fell within a pre-authorized low-risk tier and did not require a human (see position paper, Tier 1); not_required = no actionable step is attached to this event.",
+          "enum": ["pending", "approved", "rejected", "auto_approved", "not_required"]
+        },
+        "approver_id": {
+          "type": ["string", "null"],
+          "description": "Identifier of the human who approved or rejected the action. Must be null when approval_status is 'pending', 'auto_approved', or 'not_required'."
+        },
+        "approval_timestamp": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "When the approval decision was made. Must be null when approval_status is 'pending'."
+        },
+        "proposed_action": {
+          "type": ["string", "null"],
+          "description": "Short description of the action awaiting or having received approval, e.g. 'isolate host WKS-042 from network'."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "approval_status": { "const": "pending" } }
+          },
+          "then": {
+            "properties": {
+              "approver_id": { "const": null },
+              "approval_timestamp": { "const": null }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "approval_status": { "enum": ["approved", "rejected"] } }
+          },
+          "then": {
+            "required": ["approver_id", "approval_timestamp"],
+            "properties": {
+              "approver_id": { "type": "string", "minLength": 1 },
+              "approval_timestamp": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      ]
+    },
+
+    "audit_trail": {
+      "type": "array",
+      "description": "Ordered, append-only log of every action taken on this event, oldest first. This is what lets a reviewer reconstruct exactly what happened and distinguish AI actions from human actions after the fact.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["actor", "actor_type", "action", "timestamp"],
+        "additionalProperties": false,
+        "properties": {
+          "actor": {
+            "type": "string",
+            "description": "Identifier of who or what performed the action, e.g. a username or a system/model name."
+          },
+          "actor_type": {
+            "type": "string",
+            "enum": ["human", "system"],
+            "description": "Whether the action was taken by a person or an automated system. This is the field that makes 'who really decided this' auditable."
+          },
+          "action": {
+            "type": "string",
+            "description": "What was done, e.g. 'triaged', 'enriched', 'flagged_for_approval', 'approved', 'rejected', 'contained_host', 'closed'."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional free-text detail about the action."
+          }
+        }
+      }
+    }
+  }
+}
