@@ -1,0 +1,40 @@
+{
+  "generated_at": "2026-07-24T13:52:34Z",
+  "total_records": 45,
+  "valid_records": 45,
+  "error_count": 0,
+  "warning_count": 40,
+  "info_count": 0,
+  "by_check": {
+    "Missing Fields": {
+      "errors": 0,
+      "warnings": 0,
+      "info": 0,
+      "pass": true
+    },
+    "IP Validation": {
+      "errors": 0,
+      "warnings": 40,
+      "info": 0,
+      "pass": true
+    },
+    "Timestamp Anomalies": {
+      "errors": 0,
+      "warnings": 0,
+      "info": 0,
+      "pass": true
+    },
+    "Duplicate Detection": {
+      "errors": 0,
+      "warnings": 0,
+      "info": 0,
+      "pass": true
+    },
+    "Suspicious Patterns": {
+      "errors": 0,
+      "warnings": 0,
+      "info": 0,
+      "pass": true
+    }
+  }
+}

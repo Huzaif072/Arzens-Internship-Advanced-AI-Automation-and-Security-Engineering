@@ -1,0 +1,16 @@
+# DNS Logs - Key-value format: query_time=...|client=...|domain=...|type=...|response=...
+query_time=2026-07-15T10:23:45Z|client=192.168.1.50|domain=suspicious.example.com|type=A|response=NXDOMAIN
+query_time=2026-07-15T10:24:10Z|client=10.0.0.25|domain=google.com|type=A|response=NOERROR
+query_time=2026-07-15T10:24:55Z|client=192.168.1.100|domain=malware-c2.ru|type=A|response=NXDOMAIN
+query_time=2026-07-15T10:25:30Z|client=172.16.5.20|domain=github.com|type=AAAA|response=NOERROR
+query_time=2026-07-15T10:26:01Z|client=10.0.0.50|domain=windowsupdate.microsoft.com|type=A|response=NOERROR
+query_time=2026-07-15T10:27:15Z|client=192.168.1.75|domain=cryptominer-pool.xyz|type=A|response=NXDOMAIN
+query_time=2026-07-15T10:28:44Z|client=10.10.10.5|domain=api.slack.com|type=A|response=NOERROR
+query_time=2026-07-15T10:29:02Z|client=192.168.2.10|domain=phishing-site.tk|type=A|response=SERVFAIL
+query_time=2026-07-15T10:29:58Z|client=172.16.0.30|domain=stackoverflow.com|type=A|response=NOERROR
+query_time=2026-07-15T10:30:33Z|client=10.0.0.80|domain=botnet-callback.net|type=TXT|response=REFUSED
+query_time=2026-07-15T10:31:10Z|client=192.168.1.15|domain=amazonaws.com|type=A|response=NOERROR
+query_time=2026-07-15T10:32:45Z|client=10.0.0.100|domain=fast-flux-domain.cc|type=A|response=NXDOMAIN
+query_time=2026-07-15T10:33:22Z|client=172.16.5.55|domain=pypi.org|type=A|response=NOERROR
+query_time=2026-07-15T10:34:07Z|client=192.168.1.200|domain=dga-generated-abc123.pw|type=A|response=NXDOMAIN
+query_time=2026-07-15T10:35:50Z|client=10.0.0.45|domain=cloudflare.com|type=A|response=NOERROR

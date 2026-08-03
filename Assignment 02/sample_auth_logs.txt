@@ -1,0 +1,16 @@
+# Authentication Logs - Format: date time user host status source_ip
+2026-07-15 10:23:45 alice_web corporate-vpn SUCCESS 203.0.113.45
+2026-07-15 10:24:11 bob_dev office-wifi SUCCESS 192.168.1.55
+2026-07-15 10:25:30 charlie_ops remote-access FAILURE 198.51.100.10
+2026-07-15 10:26:02 alice_web corporate-vpn SUCCESS 203.0.113.45
+2026-07-15 10:26:58 unknown_user external-network FAILURE 185.220.101.99
+2026-07-15 10:27:44 dave_admin vpn-gateway SUCCESS 10.0.0.5
+2026-07-15 10:28:15 eve_analyst office-wifi SUCCESS 192.168.1.72
+2026-07-15 10:29:01 bob_dev mobile-hotspot FAILURE 198.51.100.77
+2026-07-15 10:30:33 frank_hr corporate-vpn SUCCESS 203.0.113.88
+2026-07-15 10:31:50 root external-network FAILURE 45.33.32.156
+2026-07-15 10:32:22 grace_eng office-wifi SUCCESS 192.168.1.90
+2026-07-15 10:33:07 hank_devops vpn-gateway SUCCESS 10.0.0.12
+2026-07-15 10:34:40 ivan_support remote-access FAILURE 91.108.4.0
+2026-07-15 10:35:19 judy_ciso corporate-vpn SUCCESS 203.0.113.200
+2026-07-15 10:36:55 admin external-network FAILURE 103.251.167.10
