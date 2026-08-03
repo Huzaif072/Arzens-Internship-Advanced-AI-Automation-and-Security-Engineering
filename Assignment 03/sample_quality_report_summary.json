@@ -1,0 +1,99 @@
+{
+  "total_records": 30,
+  "valid_records": 30,
+  "error_count": 0,
+  "warning_count": 5,
+  "by_check": {
+    "schema": 0,
+    "null_check": 0,
+    "range_check": 2,
+    "duplicate_check": 0,
+    "drift_check": 3
+  },
+  "null_summary": {
+    "window_id": 0.0,
+    "entity_id": 0.0,
+    "hour": 0.0,
+    "hour_of_day": 0.0,
+    "login_success_count": 0.0,
+    "login_failure_count": 0.0,
+    "unique_source_ips": 0.0,
+    "failure_ratio": 0.0,
+    "success_rate": 0.0,
+    "time_since_last_login_min": 0.0,
+    "is_business_hours": 0.0,
+    "dns_query_entropy": 0.0,
+    "domain_length": 0.0,
+    "bytes_transferred": 0.0,
+    "unique_dest_ports": 0.0,
+    "peer_deviation": 0.0
+  },
+  "drift_details": [
+    {
+      "feature": "login_success_count",
+      "ks_statistic": 0.13333333333333333,
+      "p_value": 0.9578462903438838,
+      "mean_shift_pct": -12.727272727272718
+    },
+    {
+      "feature": "login_failure_count",
+      "ks_statistic": 0.26666666666666666,
+      "p_value": 0.23907300248018645,
+      "mean_shift_pct": 181.81818181818187
+    },
+    {
+      "feature": "unique_source_ips",
+      "ks_statistic": 0.03333333333333333,
+      "p_value": 1.0,
+      "mean_shift_pct": 3.3333333333333437
+    },
+    {
+      "feature": "failure_ratio",
+      "ks_statistic": 0.26666666666666666,
+      "p_value": 0.23907300248018645,
+      "mean_shift_pct": 129.6551724137931
+    },
+    {
+      "feature": "success_rate",
+      "ks_statistic": 0.26666666666666666,
+      "p_value": 0.23907300248018645,
+      "mean_shift_pct": -11.359516616314211
+    },
+    {
+      "feature": "time_since_last_login_min",
+      "ks_statistic": 0.16666666666666666,
+      "p_value": 0.8079631540901643,
+      "mean_shift_pct": -0.3567022593726929
+    },
+    {
+      "feature": "dns_query_entropy",
+      "ks_statistic": 0.0,
+      "p_value": 1.0,
+      "mean_shift_pct": null
+    },
+    {
+      "feature": "domain_length",
+      "ks_statistic": 0.0,
+      "p_value": 1.0,
+      "mean_shift_pct": null
+    },
+    {
+      "feature": "bytes_transferred",
+      "ks_statistic": 0.0,
+      "p_value": 1.0,
+      "mean_shift_pct": null
+    },
+    {
+      "feature": "unique_dest_ports",
+      "ks_statistic": 0.0,
+      "p_value": 1.0,
+      "mean_shift_pct": null
+    },
+    {
+      "feature": "peer_deviation",
+      "ks_statistic": 0.3333333333333333,
+      "p_value": 0.07088798787114439,
+      "mean_shift_pct": 100.0
+    }
+  ]
+}

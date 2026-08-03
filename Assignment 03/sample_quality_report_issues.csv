@@ -1,0 +1,6 @@
+line_number,check_type,severity,description,recommended_action
+16,range_check,WARNING,"Column 'login_failure_count' has an extreme outlier (12.00, z=5.1) at row 16.",Confirm this is a real event (e.g. a genuine large data transfer) rather than a parsing error before alerting on it.
+16,range_check,WARNING,"Column 'unique_source_ips' has an extreme outlier (2.00, z=5.4) at row 16.",Confirm this is a real event (e.g. a genuine large data transfer) rather than a parsing error before alerting on it.
+,drift_check,WARNING,'login_failure_count': mean shifted +182% vs. reference.,"Compare against known events (deployment changes, incidents) for the same period; a large shift concentrated in one feature can indicate a real security event rather than drift noise."
+,drift_check,WARNING,'failure_ratio': mean shifted +130% vs. reference.,"Compare against known events (deployment changes, incidents) for the same period; a large shift concentrated in one feature can indicate a real security event rather than drift noise."
+,drift_check,WARNING,'peer_deviation': mean shifted +100% vs. reference.,"Compare against known events (deployment changes, incidents) for the same period; a large shift concentrated in one feature can indicate a real security event rather than drift noise."

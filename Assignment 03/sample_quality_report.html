@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Data Quality Report</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 900px; margin: 2rem auto; color: #222; }
+  h1 { border-bottom: 2px solid #333; padding-bottom: 0.3rem; }
+  h2 { margin-top: 1.5rem; color: #234; }
+  li { margin-bottom: 0.3rem; }
+  p { margin: 0.2rem 0; }
+</style>
+</head>
+<body>
+<h1>Data Quality Report</h1>
+<p>Generated: 2026-08-03T11:57:52Z  </p>
+<p>Input: sample_features.csv  </p>
+<p>Reference: sample_reference_features.csv  </p>
+<h2>Summary</h2>
+<ul>
+<li>Total Records: 30</li>
+<li>Valid Records: 30</li>
+<li>Errors: 0</li>
+<li>Warnings: 5</li>
+<li>Drift Alerts: 3</li>
+</ul>
+<h2>Schema Validation</h2>
+<p>Status: **PASS**</p>
+<ul>
+<li>OK: no issues found.</li>
+</ul>
+<h2>Null Checks</h2>
+<p>Status: **PASS**</p>
+<ul>
+<li>OK: no issues found.</li>
+</ul>
+<h2>Range Checks</h2>
+<p>Status: **WARNING**</p>
+<ul>
+<li>WARNING (line 16): Column 'login_failure_count' has an extreme outlier (12.00, z=5.1) at row 16.</li>
+<li>WARNING (line 16): Column 'unique_source_ips' has an extreme outlier (2.00, z=5.4) at row 16.</li>
+</ul>
+<h2>Duplicate Detection</h2>
+<p>Status: **PASS**</p>
+<ul>
+<li>OK: no issues found.</li>
+</ul>
+<h2>Drift Detection</h2>
+<p>Status: **WARNING**</p>
+<ul>
+<li>WARNING: 'login_failure_count': mean shifted +182% vs. reference.</li>
+<li>WARNING: 'failure_ratio': mean shifted +130% vs. reference.</li>
+<li>WARNING: 'peer_deviation': mean shifted +100% vs. reference.</li>
+</ul>
+<h2>Recommendations</h2>
+<ul>
+<li>Confirm this is a real event (e.g. a genuine large data transfer) rather than a parsing error before alerting on it.</li>
+<li>Compare against known events (deployment changes, incidents) for the same period; a large shift concentrated in one feature can indicate a real security event rather than drift noise.</li>
+</ul>
+</body>
+</html>
