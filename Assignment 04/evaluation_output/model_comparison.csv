@@ -1,0 +1,4 @@
+Model,Accuracy,Precision,Recall,F1,ROC-AUC,PR-AUC,Training Time,Inference ms/sample
+Random Forest,0.9965,0.9965,0.9965,0.9965,0.9999,1.0,see log,0.0098
+Xgboost,0.9972,0.9972,0.9972,0.9972,0.9999,1.0,see log,0.002
+Neural Network,0.993,0.993,0.993,0.993,0.9994,0.9998,see log,0.0025

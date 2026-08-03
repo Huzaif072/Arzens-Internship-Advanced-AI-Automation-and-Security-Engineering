@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Model Evaluation Report</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; color: #222; }
+    h1, h2 { color: #1a365d; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+    th { background: #edf2f7; }
+    .box { background: #f7fafc; border-left: 4px solid #3182ce; padding: 16px; margin: 16px 0; }
+    .approved { color: green; font-weight: bold; }
+    img { max-width: 100%; margin: 12px 0; }
+  </style>
+</head>
+<body>
+  <h1>MODEL EVALUATION REPORT</h1>
+  <p><strong>Dataset:</strong> CICIDS2017-style Network Traffic | <strong>Model:</strong> xgboost</p>
+
+  <h2>Performance Metrics</h2>
+  <table>
+    <tr><th>Metric</th><th>Value</th></tr>
+    
+    <tr><td>accuracy</td><td>0.9972</td></tr>
+    
+    <tr><td>precision</td><td>0.9972</td></tr>
+    
+    <tr><td>recall</td><td>0.9972</td></tr>
+    
+    <tr><td>f1</td><td>0.9972</td></tr>
+    
+    <tr><td>false_positive_rate</td><td>0.0077</td></tr>
+    
+    <tr><td>false_negative_rate</td><td>0.0014</td></tr>
+    
+    <tr><td>cost_sensitive_f1_fn2</td><td>0.9982</td></tr>
+    
+    <tr><td>roc_auc</td><td>0.9999</td></tr>
+    
+    <tr><td>pr_auc</td><td>1.0000</td></tr>
+    
+  </table>
+
+  <h2>Model Comparison</h2>
+  <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Model</th>
+      <th>Accuracy</th>
+      <th>Precision</th>
+      <th>Recall</th>
+      <th>F1</th>
+      <th>ROC-AUC</th>
+      <th>PR-AUC</th>
+      <th>Training Time</th>
+      <th>Inference ms/sample</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Random Forest</td>
+      <td>0.9965</td>
+      <td>0.9965</td>
+      <td>0.9965</td>
+      <td>0.9965</td>
+      <td>0.9999</td>
+      <td>1.0000</td>
+      <td>see log</td>
+      <td>0.0098</td>
+    </tr>
+    <tr>
+      <td>Xgboost</td>
+      <td>0.9972</td>
+      <td>0.9972</td>
+      <td>0.9972</td>
+      <td>0.9972</td>
+      <td>0.9999</td>
+      <td>1.0000</td>
+      <td>see log</td>
+      <td>0.0020</td>
+    </tr>
+    <tr>
+      <td>Neural Network</td>
+      <td>0.9930</td>
+      <td>0.9930</td>
+      <td>0.9930</td>
+      <td>0.9930</td>
+      <td>0.9994</td>
+      <td>0.9998</td>
+      <td>see log</td>
+      <td>0.0025</td>
+    </tr>
+  </tbody>
+</table>
+
+  <h2>Threshold Analysis</h2>
+  <div class="box">
+    <p><strong>Recommended threshold:</strong> 0.40000000000000013</p>
+    <p>Threshold 0.40 balances high recall for threat detection with acceptable precision.</p>
+  </div>
+  <img src="evaluation_output/threshold_analysis.png" alt="Threshold Analysis">
+
+  <h2>ROC & PR Curves</h2>
+  <img src="evaluation_output/roc_pr_curves.png" alt="ROC PR Curves">
+
+  <h2>Confusion Matrix</h2>
+  <img src="evaluation_output/confusion_matrix.png" alt="Confusion Matrix">
+
+  <h2>SHAP — Top Features</h2>
+  <ol>
+  
+    <li>flow_bytes_per_sec (mean |SHAP| = 4.5483)</li>
+  
+    <li>flow_duration (mean |SHAP| = 1.8780)</li>
+  
+    <li>flow_packets_per_sec (mean |SHAP| = 1.5720)</li>
+  
+    <li>total_bytes (mean |SHAP| = 1.4058)</li>
+  
+    <li>total_packets (mean |SHAP| = 0.8490)</li>
+  
+    <li>total_fwd_packets (mean |SHAP| = 0.5137)</li>
+  
+    <li>ack_flag_count (mean |SHAP| = 0.4839)</li>
+  
+    <li>total_fwd_bytes (mean |SHAP| = 0.3775)</li>
+  
+    <li>total_bwd_packets (mean |SHAP| = 0.3593)</li>
+  
+    <li>fwd_psh_flags (mean |SHAP| = 0.3157)</li>
+  
+  </ol>
+  <img src="shap_analysis/summary_plot.png" alt="SHAP Summary">
+
+  <h2>Local Explanations</h2>
+  
+  <div class="box"><strong>true_positive_1</strong>: Correctly flagged as malicious because flow_bytes_per_sec increased suspicion (SHAP=6.121); flow_packets_per_sec increased suspicion (SHAP=2.390); flow_duration decreased suspicion (SHAP=-1.002).</div>
+  
+  <div class="box"><strong>true_positive_2</strong>: Correctly flagged as malicious because flow_bytes_per_sec increased suspicion (SHAP=6.189); flow_packets_per_sec increased suspicion (SHAP=2.221); total_bytes increased suspicion (SHAP=1.287).</div>
+  
+  <div class="box"><strong>false_positive_1</strong>: Incorrectly flagged as attack because flow_bytes_per_sec increased suspicion (SHAP=3.456); total_bwd_packets decreased suspicion (SHAP=-1.472); flow_packets_per_sec increased suspicion (SHAP=1.357).</div>
+  
+  <div class="box"><strong>false_positive_2</strong>: Incorrectly flagged as attack because total_bytes increased suspicion (SHAP=2.955); flow_duration decreased suspicion (SHAP=-1.479); fwd_psh_flags decreased suspicion (SHAP=-1.199).</div>
+  
+  <div class="box"><strong>false_negative_1</strong>: Missed attack because flow_bytes_per_sec decreased suspicion (SHAP=-3.789); total_bytes increased suspicion (SHAP=1.650); bwd_psh_flags decreased suspicion (SHAP=-1.467).</div>
+  
+
+  <h2>Error Analysis</h2>
+  <p>False Positives: 14 | False Negatives: 9</p>
+  <ul><li>False positives often show unusual values in: subflow_fwd_bytes, total_fwd_bytes, total_bytes, total_packets, total_fwd_packets</li><li>False negatives may indicate evasion — consider retraining with adversarial samples.</li><li>Monitor feature drift monthly and retrain with new attack samples.</li></ul>
+
+  <h2>Production Readiness</h2>
+  <div class="box">
+    <p class="approved">Verdict: APPROVED</p>
+    <p>Inference: 0.0189 ms/sample | Size: 0.45 MB</p>
+    <p>Robustness: 0.9972 → 0.6044 under noise</p>
+  </div>
+</body>
+</html>
+    
