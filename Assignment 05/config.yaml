@@ -1,0 +1,50 @@
+# Isolation Forest Anomaly Detection - Configuration
+# Assignment 05 - ArzensIntern Advanced Track
+# Author: Muhammad Huzaif Amir
+
+random_state: 42
+
+dataset:
+  path: "sample_data/network_traffic_dataset.csv"
+  label_column: "label_binary"          # Benign / Attack - used only for evaluation, never for fitting
+  multiclass_label_column: "label"      # per-attack-type breakdown in evaluation.py
+
+features:
+  # Canonical UNSW-NB15 feature names required by the assignment manual.
+  # See FEATURE_ALIASES in anomaly_detector.py for the mapping onto the
+  # CICIDS2017-style column names used by the shipped synthetic dataset.
+  selected:
+    - dur       # Duration
+    - spkts     # Source packets
+    - dpkts     # Destination packets
+    - sbytes    # Source bytes
+    - dbytes    # Destination bytes
+    - rate      # Flow rate
+  missing_value_strategy: "median"
+  scaler: "StandardScaler"
+
+split:
+  train_ratio: 0.80
+  test_ratio: 0.20
+
+model:
+  type: "IsolationForest"
+  n_estimators: 100
+  contamination: 0.1
+  random_state: 42
+  n_jobs: -1
+
+threshold_tuning:
+  candidates: [-0.5, -0.3, -0.1, 0.0, 0.1, 0.3]
+  default_threshold: 0.0
+  selection_metric: "f1"
+
+operational:
+  assumed_events_per_day: 10000
+  soc_analyst_alert_capacity_per_day: 50
+  concept_drift_alert_pct: 20          # flag for retraining if anomaly rate shifts more than this
+
+output:
+  model_path: "outputs/isolation_forest_model.pkl"
+  scaler_path: "outputs/standard_scaler.pkl"
+  evaluation_dir: "outputs/evaluation_output"

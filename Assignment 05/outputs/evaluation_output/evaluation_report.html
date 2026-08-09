@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Model Evaluation Report - Isolation Forest Anomaly Detector</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 900px; margin: 40px auto;
+         color: #1a1a2e; line-height: 1.55; padding: 0 20px; }
+  h1 { color: #16213e; border-bottom: 3px solid #0f3460; padding-bottom: 10px; }
+  h2 { color: #0f3460; margin-top: 36px; border-left: 5px solid #e94560; padding-left: 10px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+  th { background: #0f3460; color: white; }
+  tr:nth-child(even) { background: #f5f6fa; }
+  .metric-card { display: inline-block; background: #f5f6fa; border-radius: 8px; padding: 14px 22px;
+                  margin: 6px; text-align: center; min-width: 140px; }
+  .metric-value { font-size: 1.6em; font-weight: bold; color: #0f3460; }
+  .metric-label { font-size: 0.85em; color: #555; }
+  .status-robust { color: #1a7f37; font-weight: bold; }
+  .status-fragile { color: #c0392b; font-weight: bold; }
+  .status-moderate { color: #b8860b; font-weight: bold; }
+  .banner { background: #16213e; color: white; padding: 20px; border-radius: 8px; text-align: center; }
+  img { max-width: 100%; border: 1px solid #ddd; border-radius: 6px; margin: 10px 0; }
+  code { background: #eee; padding: 2px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <h1 style="border:none; color:white; margin:0;">MODEL EVALUATION REPORT</h1>
+  <p>Isolation Forest Anomaly Detector &mdash; Assignment 05, Task 3</p>
+</div>
+
+<p><strong>Dataset:</strong> network_traffic_dataset.csv test split (11,022 samples) &nbsp;|&nbsp;
+<strong>Decision threshold:</strong> 0.0 &nbsp;|&nbsp;
+<strong>Author:</strong> Muhammad Huzaif Amir</p>
+
+<h2>Part A &mdash; Standard Evaluation</h2>
+
+<div>
+  <div class="metric-card"><div class="metric-value">87.3%</div><div class="metric-label">Accuracy</div></div>
+  <div class="metric-card"><div class="metric-value">97.1%</div><div class="metric-label">Precision</div></div>
+  <div class="metric-card"><div class="metric-value">42.6%</div><div class="metric-label">Recall</div></div>
+  <div class="metric-card"><div class="metric-value">59.3%</div><div class="metric-label">F1-Score</div></div>
+  <div class="metric-card"><div class="metric-value">0.3%</div><div class="metric-label">False Positive Rate</div></div>
+</div>
+
+<h3>Confusion Matrix</h3>
+<table>
+  <tr><th></th><th>Predicted Normal</th><th>Predicted Anomaly</th><th>Note</th></tr>
+  <tr><td><strong>Actual Normal</strong></td><td>8,612</td><td>30</td><td>FPR: 0.3%</td></tr>
+  <tr><td><strong>Actual Anomaly</strong></td><td>1,365</td><td>1,015</td><td>Recall: 42.6%</td></tr>
+</table>
+<img src="confusion_matrix.png" alt="Confusion matrix heatmap">
+
+<p><strong>Interpretation:</strong> the model catches 42.6% of true attacks in the
+test set while generating a false-positive rate of 0.3% on normal traffic
+(roughly 3 false alarms per 1,000 normal events).</p>
+
+<h3>Per-Attack-Type Breakdown</h3>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>attack_type</th>
+      <th>count</th>
+      <th>flagged_rate</th>
+      <th>note</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PortScan</td>
+      <td>561</td>
+      <td>0.000</td>
+      <td>detection rate / recall for this attack type</td>
+    </tr>
+    <tr>
+      <td>Benign</td>
+      <td>8642</td>
+      <td>0.003</td>
+      <td>false-positive rate (should be low)</td>
+    </tr>
+    <tr>
+      <td>BruteForce</td>
+      <td>331</td>
+      <td>0.079</td>
+      <td>detection rate / recall for this attack type</td>
+    </tr>
+    <tr>
+      <td>WebAttack</td>
+      <td>265</td>
+      <td>0.268</td>
+      <td>detection rate / recall for this attack type</td>
+    </tr>
+    <tr>
+      <td>Botnet</td>
+      <td>167</td>
+      <td>0.461</td>
+      <td>detection rate / recall for this attack type</td>
+    </tr>
+    <tr>
+      <td>DoS</td>
+      <td>962</td>
+      <td>0.777</td>
+      <td>detection rate / recall for this attack type</td>
+    </tr>
+    <tr>
+      <td>Infiltration</td>
+      <td>94</td>
+      <td>1.000</td>
+      <td>detection rate / recall for this attack type</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Part B &mdash; Robustness / Evasion Check</h2>
+<p>Known test-set anomalies were perturbed with small, realistic modifications
+(10% Gaussian noise, &plusmn;10% feature scaling, and a combined attack) and re-scored
+with the same frozen model and scaler to see whether they still get flagged.</p>
+<table>
+  <tr><th>Perturbation</th><th>Still Detected</th><th>Evasion Success Rate</th></tr>
+  <tr><td>Baseline (no perturbation)</td><td>42.6%</td><td>&mdash;</td></tr>
+  <tr><td>+10% Gaussian noise</td><td>51.1%</td><td>48.9%</td></tr>
+  <tr><td>Scale &times;0.9</td><td>36.4%</td><td>63.6%</td></tr>
+  <tr><td>Scale &times;1.1</td><td>50.0%</td><td>50.0%</td></tr>
+  <tr><td>Combined noise + scale-down</td><td>45.4%</td><td>54.6%</td></tr>
+</table>
+<p><strong>Robustness status: <span class="status-fragile">FRAGILE</span></strong>
+&mdash; averaged across perturbations, 45.1% of previously-flagged
+anomalies were still detected after modification
+(2,380 anomalies tested).</p>
+
+<h2>Part C &mdash; Operational Considerations</h2>
+
+<h3>Alert Fatigue Analysis</h3>
+<table>
+  <tr><th>Assumption</th><th>Value</th></tr>
+  <tr><td>Simulated daily events</td><td>10,000</td></tr>
+  <tr><td>Observed anomaly rate</td><td>9.48%</td></tr>
+  <tr><td>Expected alerts/day</td><td>948</td></tr>
+  <tr><td>Assumed analyst capacity</td><td>50/day</td></tr>
+  <tr><td>Manageable?</td><td>No</td></tr>
+</table>
+<p><strong>Recommendation:</strong> Alert volume exceeds analyst capacity - raise the decision-function threshold (fewer, higher-confidence alerts) or add a triage/auto-close tier for low-severity anomalies.</p>
+
+<h3>Concept Drift Awareness</h3>
+<table>
+  <tr><th>Window</th><th>Anomaly Rate</th></tr>
+  <tr><td>Week 1 (simulated, first half of test set)</td><td>9.05%</td></tr>
+  <tr><td>Week 4 (simulated, second half of test set)</td><td>9.91%</td></tr>
+</table>
+<p>Anomaly rate changed by 9.4% between the two windows - this is within the acceptable 20% drift threshold; no immediate retraining is required.</p>
+
+<h2>Threshold Recommendation</h2>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>threshold</th>
+      <th>tp</th>
+      <th>fp</th>
+      <th>fn</th>
+      <th>tn</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-0.500</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2380</td>
+      <td>8642</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <td>-0.300</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2380</td>
+      <td>8642</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <td>-0.100</td>
+      <td>244</td>
+      <td>0</td>
+      <td>2136</td>
+      <td>8642</td>
+      <td>1.000</td>
+      <td>0.103</td>
+      <td>0.186</td>
+    </tr>
+    <tr>
+      <td>0.000</td>
+      <td>1015</td>
+      <td>30</td>
+      <td>1365</td>
+      <td>8612</td>
+      <td>0.971</td>
+      <td>0.426</td>
+      <td>0.593</td>
+    </tr>
+    <tr>
+      <td>0.100</td>
+      <td>1679</td>
+      <td>2448</td>
+      <td>701</td>
+      <td>6194</td>
+      <td>0.407</td>
+      <td>0.705</td>
+      <td>0.516</td>
+    </tr>
+    <tr>
+      <td>0.300</td>
+      <td>2380</td>
+      <td>8642</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.216</td>
+      <td>1.000</td>
+      <td>0.355</td>
+    </tr>
+  </tbody>
+</table>
+<img src="threshold_tuning.png" alt="Precision/Recall/F1 vs threshold">
+
+<hr>
+<p style="color:#888; font-size:0.85em;">Generated automatically by evaluation.py &mdash; ArzensIntern Advanced Track, Assignment 05.</p>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "n_anomalies_tested": 2380,
+  "detected_rates": {
+    "baseline_detected_rate": 0.4264705882352941,
+    "noise_10pct_detected_rate": 0.5109243697478991,
+    "scale_0.9x_detected_rate": 0.36428571428571427,
+    "scale_1.1x_detected_rate": 0.5004201680672269,
+    "row_shuffle_sanity_detected_rate": 0.4264705882352941,
+    "combined_noise_and_scale_detected_rate": 0.453781512605042
+  },
+  "evasion_success_rates": {
+    "noise_10pct_detected_rate": 0.4891,
+    "scale_0.9x_detected_rate": 0.6357,
+    "scale_1.1x_detected_rate": 0.4996,
+    "row_shuffle_sanity_detected_rate": 0.5735,
+    "combined_noise_and_scale_detected_rate": 0.5462
+  },
+  "average_still_detected_rate": 0.4511764705882353,
+  "robustness_status": "FRAGILE"
+}

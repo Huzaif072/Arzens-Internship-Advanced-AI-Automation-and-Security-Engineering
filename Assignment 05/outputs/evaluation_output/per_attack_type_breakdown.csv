@@ -1,0 +1,8 @@
+attack_type,count,flagged_rate,note
+PortScan,561,0.0,detection rate / recall for this attack type
+Benign,8642,0.003,false-positive rate (should be low)
+BruteForce,331,0.079,detection rate / recall for this attack type
+WebAttack,265,0.268,detection rate / recall for this attack type
+Botnet,167,0.461,detection rate / recall for this attack type
+DoS,962,0.777,detection rate / recall for this attack type
+Infiltration,94,1.0,detection rate / recall for this attack type
