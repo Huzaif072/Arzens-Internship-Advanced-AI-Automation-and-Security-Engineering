@@ -1,0 +1,7 @@
+aws_region       = "us-east-1"
+project_name     = "arzens-secure"
+environment      = "dev"
+admin_cidr       = "203.0.113.10/32"
+ami_id           = "ami-REPLACE_WITH_APPROVED_UBUNTU_AMI"
+key_pair_name    = "REPLACE_WITH_EC2_KEY_PAIR"
+data_bucket_name = "replace-with-globally-unique-private-name"

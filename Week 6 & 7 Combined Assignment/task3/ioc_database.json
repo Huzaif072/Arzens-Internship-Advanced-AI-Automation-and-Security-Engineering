@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-13T00:00:00+00:00",
+  "iocs": {
+    "8.8.8.8": {
+      "indicator": "8.8.8.8",
+      "type": "ip",
+      "first_seen": "2026-09-01T00:00:00+00:00",
+      "last_seen": "2026-09-13T00:00:00+00:00",
+      "expiration": "2026-10-01T00:00:00+00:00",
+      "risk_score": 0,
+      "confidence": 80,
+      "status": "active",
+      "source_results": [],
+      "score_history": [
+        0
+      ]
+    },
+    "44d88612fea8a8f36de82e1278abb02f": {
+      "indicator": "44d88612fea8a8f36de82e1278abb02f",
+      "type": "md5",
+      "first_seen": "2026-09-10T00:00:00+00:00",
+      "last_seen": "2026-09-13T00:00:00+00:00",
+      "expiration": "2026-10-10T00:00:00+00:00",
+      "risk_score": 92,
+      "confidence": 95,
+      "status": "active",
+      "source_results": [],
+      "score_history": [
+        90,
+        92
+      ]
+    }
+  }
+}

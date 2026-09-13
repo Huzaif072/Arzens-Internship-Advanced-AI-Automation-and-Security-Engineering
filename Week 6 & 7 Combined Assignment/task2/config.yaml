@@ -1,0 +1,7 @@
+# API keys may also be supplied through VIRUSTOTAL_API_KEY, ABUSEIPDB_API_KEY, and OTX_API_KEY.
+virustotal_api_key: "YOUR_VIRUSTOTAL_API_KEY"
+abuseipdb_api_key: "YOUR_ABUSEIPDB_API_KEY"
+otx_api_key: "YOUR_OTX_API_KEY"
+cache_ttl_hours: 24
+request_timeout_seconds: 12
+rate_limit_pause_seconds: 15
