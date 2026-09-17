@@ -1,0 +1,5 @@
+indicator,type,queried_at,risk_score,sources_ok,status
+8.8.8.8,ip,2026-09-13T00:00:00+00:00,0,3,enriched
+example.com,domain,2026-09-13T00:00:00+00:00,0,2,enriched
+44d88612fea8a8f36de82e1278abb02f,md5,2026-09-13T00:00:00+00:00,92,2,enriched
+https://example.com/login,url,2026-09-13T00:00:00+00:00,0,2,enriched

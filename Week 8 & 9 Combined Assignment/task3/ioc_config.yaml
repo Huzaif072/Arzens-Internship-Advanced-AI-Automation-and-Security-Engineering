@@ -1,0 +1,4 @@
+expiration_days: 30
+blocklist_confidence_threshold: 70
+scheduled_update: "0 2 * * 1"
+health_check_interval_minutes: 15

@@ -1,0 +1,9 @@
+---
+- name: Apply baseline, security, and compliance roles
+  hosts: webservers
+  become: true
+  gather_facts: true
+  roles:
+    - common
+    - security
+    - compliance

@@ -1,0 +1,15 @@
+Terraform will perform the following actions:
+
+  # aws_vpc.main will be created
+  # aws_subnet.public will be created
+  # aws_internet_gateway.main will be created
+  # aws_security_group.web will be created
+  # aws_instance.web will be created
+  # aws_s3_bucket.private will be created
+  # aws_s3_bucket_public_access_block.private will be created
+  # aws_s3_bucket_versioning.private will be created
+  # aws_s3_bucket_server_side_encryption_configuration.private will be created
+  # aws_s3_bucket_policy.tls_only will be created
+
+Plan: 10 to add, 0 to change, 0 to destroy.
+Note: This is a representative plan. Run `terraform plan` after setting real variables and reviewing the approved AMI, admin CIDR, backend, and bucket name.

@@ -1,0 +1,5 @@
+indicator,type,description
+8.8.8.8,ip,DNS resolver validation sample
+example.com,domain,documentation domain sample
+44d88612fea8a8f36de82e1278abb02f,md5,EICAR-compatible test hash
+https://example.com/login,url,documentation URL sample

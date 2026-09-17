@@ -1,0 +1,61 @@
+---
+- name: Install security packages
+  ansible.builtin.apt:
+    name: [ufw, fail2ban, auditd, audispd-plugins, openssh-server]
+    state: present
+    update_cache: true
+- name: Disable root SSH login and passwords
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    validate: "/usr/sbin/sshd -t -f %s"
+    backup: true
+  loop:
+    - { regexp: '^#?PermitRootLogin', line: 'PermitRootLogin no' }
+    - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication no' }
+    - { regexp: '^#?PubkeyAuthentication', line: 'PubkeyAuthentication yes' }
+  notify: Restart SSH
+- name: Configure UFW default deny
+  community.general.ufw:
+    direction: incoming
+    policy: deny
+- name: Configure UFW default outgoing allow
+  community.general.ufw:
+    direction: outgoing
+    policy: allow
+- name: Allow required web and SSH ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop: ['22', '80', '443']
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+- name: Enable fail2ban
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: true
+- name: Install audit rules
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/arzens-hardening.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -w /etc/passwd -p wa -k identity
+      -w /etc/shadow -p wa -k identity
+      -w /etc/sudoers -p wa -k scope
+      -w /var/log/auth.log -p wa -k authlog
+  notify: Restart auditd
+- name: Enable unattended upgrades
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
